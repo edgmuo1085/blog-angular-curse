@@ -1,0 +1,29 @@
+<div class="container-fluid mt-4">
+	<h1>{{page_title}}</h1>
+	<p>Identificate en la plataforma</p>
+
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="alert alert-danger" *ngIf="status == 'error'">
+				Correo o contraseña incorrecta
+			</div>
+			<!-- Formulario de registro -->
+			<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm);">
+				<div class="form-group">
+					<label for="email">Correo</label>
+					<input type="email" class="form-control" id="email" name="email" #email="ngModel" [(ngModel)]="user.email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+
+					<small *ngIf="!email.valid && email.touched" class="invalid-feedback d-block">Ingrese su correo electrónico</small>
+				</div>
+				<div class="form-group">
+					<label for="password">Password</label>
+					<input type="password" class="form-control" id="password" name="password" #password="ngModel" [(ngModel)]="user.password" required>
+
+					<small *ngIf="!password.valid && password.touched" class="invalid-feedback d-block">Ingrese una contraseña válida</small>
+				</div>
+				<button type="submit" class="btn btn-success" [disabled]="loginForm.invalid">Identificarse</button>
+			</form>
+		</div>
+	</div>
+
+</div>
