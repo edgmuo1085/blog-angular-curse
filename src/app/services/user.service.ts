@@ -6,76 +6,79 @@ import { global } from './global';
 
 @Injectable()
 export class UserService {
-	public url: string;
-	public identity;
-	public token;
+  url: string = '';
+  identity: any;
+  token: any;
 
-	constructor(
-		public _http: HttpClient
-	){
-		this.url = global.url;
-	}
+  constructor(public _http: HttpClient) {
+    this.url = global.url;
+  }
 
-	test() {
-		return "Hola mundo desde un servicio";
-	}
+  test() {
+    return 'Hola mundo desde un servicio';
+  }
 
-	register(user): Observable<any>{
-		let json = JSON.stringify(user);
-		let params = 'json='+json;
+  register(user: any): Observable<any> {
+    let json = JSON.stringify(user);
+    let params = 'json=' + json;
 
-		let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let headers = new HttpHeaders().set(
+      'Content-Type',
+      'application/x-www-form-urlencoded'
+    );
 
-		return this._http.post(this.url+'register', params, {headers: headers});
-	}
+    return this._http.post(this.url + 'register', params, { headers: headers });
+  }
 
-	signup(user, gettoken = null): Observable<any>{
+  signup(user: any, gettoken: boolean = false): Observable<any> {
+    if (gettoken != false) {
+      user.gettoken = 'true';
+    }
 
-		if (gettoken != null) {
-			user.gettoken = 'true';
-		}
+    let json = JSON.stringify(user);
+    let params = 'json=' + json;
 
-		let json = JSON.stringify(user);
-		let params = 'json='+json;
+    let headers = new HttpHeaders().set(
+      'Content-Type',
+      'application/x-www-form-urlencoded'
+    );
 
+    return this._http.post(this.url + 'login', params, { headers: headers });
+  }
 
-		let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  update(token: any, user: any): Observable<any> {
+    let json = JSON.stringify(user);
+    let params = 'json=' + json;
 
-		return this._http.post(this.url+'login', params, {headers: headers});
-	}
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('Authorization', token);
 
-	update(token, user): Observable<any>{
-		let json = JSON.stringify(user);
-		let params = 'json='+json;
+    return this._http.put(this.url + 'user/edit', params, { headers: headers });
+  }
 
-		let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-									.set('Authorization', token);
+  getIdentity() {
+    let identityJSON = localStorage.getItem('identity') || '{}';
+    let identity = JSON.parse(identityJSON);
 
-		return this._http.put(this.url+'user/edit', params, {headers: headers});
-	}
+    if (identity && identity != 'undefined') {
+      this.identity = identity;
+    } else {
+      this.identity = null;
+    }
 
-	getIdentity() {
-		let identity = JSON.parse(localStorage.getItem('identity'));
+    return this.identity;
+  }
 
-		if (identity && identity != "undefined") {
-			this.identity = identity;
-		} else {
-			this.identity = null;
-		}
+  getToken() {
+    let token = localStorage.getItem('token');
 
-		return this.identity;
-	}
+    if (token && token != 'undefined') {
+      this.token = token;
+    } else {
+      this.token = null;
+    }
 
-	getToken() {
-		let token = localStorage.getItem('token');
-
-		if (token && token != "undefined") {
-			this.token = token;
-		} else {
-			this.token = null;
-		}
-
-		return this.token;
-	}
-
+    return this.token;
+  }
 }

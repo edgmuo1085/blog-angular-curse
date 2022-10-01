@@ -8,9 +8,9 @@ import { UserService } from './services/user.service';
 	providers: [UserService]
 })
 export class AppComponent implements OnInit, DoCheck {
-	public title = 'Blog Angular';
-	public identity;
-	public token;
+	title = 'Blog Angular';
+	identity: any;
+	token: any;
 
 	constructor(
 		public _userService: UserService
